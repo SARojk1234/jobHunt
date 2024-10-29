@@ -1,0 +1,5 @@
+# Enforce LF endings for JSON files
+*.json text eol=lf
+
+# Automatically handle text files
+* text=auto
