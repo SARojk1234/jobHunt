@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import AppliedJobTable from "../components/AppliedJobTable"
+
 
 const jobSlice = createSlice({
     name:"job",

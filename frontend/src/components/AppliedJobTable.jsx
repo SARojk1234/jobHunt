@@ -1,37 +1,38 @@
-import React from 'react'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
-import { Badge } from './ui/badge'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import Job from './Job';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSearchedQuery } from '@/redux/jobSlice';
+import useGetAllJobs from '@/hooks/useGetAllJobs';
 
-const AppliedJobTable = () => {
-    const {allAppliedJobs} = useSelector(store=>store.job);
+// const randomJobs = [1, 2,45];
+
+const Browse = () => {
+    useGetAllJobs();
+    const {allJobs} = useSelector(store=>store.job);
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        return ()=>{
+            dispatch(setSearchedQuery(""));
+        }
+    },[])
+
     return (
         <div>
-            <Table>
-                <TableCaption>A list of your applied jobs</TableCaption>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Job Role</TableHead>
-                        <TableHead>Company</TableHead>
-                        <TableHead className="text-right">Status</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
+            <div className='max-w-7xl mx-auto my-10'>
+                <h1 className='font-bold text-xl my-10'>Search Results ({allJobs.length})</h1>
+                <div className='grid grid-cols-3 gap-4'>
                     {
-                        allAppliedJobs.length <= 0 ? <span>You haven't applied any job yet.</span> : allAppliedJobs.map((appliedJob) => (
-                            <TableRow key={appliedJob._id}>
-                                <TableCell>{appliedJob?.createdAt?.split("T")[0]}</TableCell>
-                                <TableCell>{appliedJob.job?.title}</TableCell>
-                                <TableCell>{appliedJob.job?.company?.name}</TableCell>
-                                <TableCell className="text-right"><Badge className={`${appliedJob?.status === "rejected" ? 'bg-red-400' : appliedJob.status === 'pending' ? 'bg-gray-400' : 'bg-green-400'}`}>{appliedJob.status.toUpperCase()}</Badge></TableCell>
-                            </TableRow>
-                        ))
+                        allJobs.map((job) => {
+                            return (
+                                <Job key={job._id} job={job}/>
+                            )
+                        })
                     }
-                </TableBody>
-            </Table>
+                </div>
+
+            </div>
         </div>
     )
 }
 
-export default AppliedJobTable;
+export default Browse
